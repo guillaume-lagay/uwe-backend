@@ -39,7 +39,6 @@ class User extends BaseUser
      */
     private $address;
 
-
     public function __construct()
     {
         parent::__construct();
