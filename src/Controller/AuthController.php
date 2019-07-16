@@ -4,12 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Student;
 use FOS\UserBundle\Model\UserManagerInterface;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\User;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -17,6 +20,18 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class AuthController extends AbstractController
 {
+    private $serializer;
+
+    /**
+     * AuthController constructor.
+     * @param $serializer
+     */
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
+
     /**
      * @Rest\Post("/register")
      * @return JsonResponse
@@ -43,23 +58,25 @@ class AuthController extends AbstractController
 
         $listErrors = $validator->validate($student);
         if(count($listErrors) > 0) {
-            $responsejson = new JsonResponse(["error" => (string)$listErrors], 500);
+            $responsejson = new JsonResponse(["error" => (string)$listErrors], 400);
 
             return $responsejson;
         }
 
         try {
             $em->flush();
-            $userManager->updateUser($student, true);
-        } catch (\Exception $e) {
-            $responsejson = new JsonResponse(["error" => "L'email/username est déjà utilisé !"], 500);
+            $userManager->updateUser($student);
 
-            return $responsejson;
+        } catch (\Exception $e) {
+
+            return new JsonResponse(["error" => "L'email/username est déjà utilisé !"], 403);
         }
 
-        $responsejson = new JsonResponse(["success" => sprintf("%s a bien été inscrit ! ", $student->getUsername())], 201);
+        $data = $this->serializer->serialize($student, 'json',SerializationContext::create()->setGroups(array('student_detail')));
 
-        return $responsejson;
+        return new Response($data);
+
+
 
     }
 }

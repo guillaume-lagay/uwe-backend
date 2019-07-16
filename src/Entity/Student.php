@@ -18,7 +18,6 @@ class Student extends User
      * @ORM\OneToMany(targetEntity="Mark", mappedBy="student")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
-     * @Serializer\Groups({"student_detail"})
      * */
     private $marks;
 
@@ -26,7 +25,6 @@ class Student extends User
      * @ORM\ManyToMany(targetEntity="Module", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
-     * @Serializer\Groups({"student_detail"})
      * */
     private $modules;
 
