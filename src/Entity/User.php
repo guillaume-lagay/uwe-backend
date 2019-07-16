@@ -27,33 +27,33 @@ class User extends BaseUser
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"student_list","student_detail"})
+     * @Serializer\Groups({"student"})
      */
     protected $id;
 
     /**
-     * @Groups({"student_list","student_detail"})
+     * @Serializer\Groups({"student"})
      */
     protected $email;
 
     /**
      * @ORM\Column(type="string", length=40)
      * @Assert\NotBlank()
-     * @Serializer\Groups({"student_list","student_detail"})
+     * @Serializer\Groups({"student"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=40)
      * @Assert\NotBlank()
-     * @Serializer\Groups({"student_list","student_detail"})
+     * @Serializer\Groups({"student"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=80)
      * @Assert\NotBlank()
-     * @Serializer\Groups({"student_detail"})
+     * @Serializer\Groups({"student"})
      */
     private $address;
 
