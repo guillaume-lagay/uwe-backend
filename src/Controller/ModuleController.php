@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 
+use App\Entity\Component;
 use App\Entity\Module;
+use App\Entity\Student;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -41,7 +43,7 @@ class ModuleController extends AbstractController
     }
 
     /**
-     * @Rest\Get("/modules", name="list_module", requirements={"id" = "\d+"})
+     * @Rest\Get("/modules", name="module_list")
      *
      * @return Response
      */
@@ -94,8 +96,7 @@ class ModuleController extends AbstractController
 
         $listErrors = $validator->validate($module);
         if(count($listErrors) > 0) {
-            $responsejson = new JsonResponse(["error" => (string)$listErrors], 500);
-            return $responsejson;
+            return new JsonResponse(["error" => (string)$listErrors], 500);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -118,5 +119,92 @@ class ModuleController extends AbstractController
         return new JsonResponse(["success" => "The module has been deleted !"], 200);
     }
 
+    /**
+     * @Rest\Post("/modules/{module_id}/components/{component_id}", name="add_module_component")
+     *
+     * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
+     * @ParamConverter("component", options={"mapping": {"component_id": "id"}})
+     *
+     * @return Response
+     */
+    public function addComponent(Module $module, Component $component) {
+        if (!$module->addComponent($component)) {
+            return new JsonResponse(["error" => sprintf('%s is already on the module %s !', $component->getName(), $module->getName())], 200);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $module->addComponent($component);
+        $em->persist($module);
+        $em->flush();
+
+        return new JsonResponse(["success" => sprintf('%s has been added to the module %s !', $component->getName(), $module->getName())], 200);
+    }
+
+    /**
+     * @Rest\Delete("/modules/{module_id}/components/{component_id}", name="remove_module_component")
+     *
+     * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
+     * @ParamConverter("component", options={"mapping": {"component_id": "id"}})
+     *
+     * @return Response
+     */
+    public function removeComponent(Module $module, Component $component) {
+        if (!$module->removeComponent($component)) {
+            return new JsonResponse(["error" => sprintf('%s is not on the module %s !', $component->getName(), $module->getName())], 200);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $module->removeComponent($component);
+        $em->persist($module);
+        $em->flush();
+
+        return new JsonResponse(["success" => sprintf('%s has been removed from the module %s !', $component->getName(), $module->getName())], 200);
+    }
+
+    /**
+     * @Rest\Post("/modules/{module_id}/students/{student_id}", name="add_module_student")
+     *
+     * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
+     * @ParamConverter("student", options={"mapping": {"student_id": "id"}})
+     *
+     * @return Response
+     */
+    public function addStudent(Module $module, Student $student) {
+        if (!$module->addStudent($student)) {
+            return new JsonResponse(["error" => sprintf('This student is already on the module %s !', $module->getName())], 200);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $module->addComponent($student);
+        $em->persist($module);
+        $em->flush();
+
+        return new JsonResponse(["success" => sprintf('This student has been added to the module %s !', $module->getName())], 200);
+    }
+
+    /**
+     * @Rest\Delete("/modules/{module_id}/students/{student_id}", name="remove_module_student")
+     *
+     * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
+     * @ParamConverter("student", options={"mapping": {"student_id": "id"}})
+     *
+     * @return Response
+     */
+    public function removeStudent(Module $module, Student $student) {
+        if (!$module->removeStudent($student)) {
+            return new JsonResponse(["error" => sprintf('The student is not on the module %s !', $module->getName())], 200);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $module->removeComponent($student);
+        $em->persist($module);
+        $em->flush();
+
+        return new JsonResponse(["success" => sprintf('The student has been removed from the module %s !', $module->getName())], 200);
+    }
 
 }
