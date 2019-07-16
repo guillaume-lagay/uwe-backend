@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Student;
 use FOS\UserBundle\Model\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,16 +21,16 @@ class AuthController extends AbstractController
      * @Rest\Post("/register")
      * @return JsonResponse
      */
-    public function register(Request $request, UserManagerInterface $userManager, ValidatorInterface $validator)
+    public function register(Request $request, UserManagerInterface $studentManager, ValidatorInterface $validator)
     {
         $data = json_decode($request->getContent(), true);
 
 
         $em = $this->getDoctrine()->getManager();
 
-        $user = new User();
+        $student = new Student();
 
-        $user
+        $student
             ->setUsername($data['username'])
             ->setPlainPassword($data['password'])
             ->setEmail($data['email'])
@@ -40,7 +41,7 @@ class AuthController extends AbstractController
             ->setFirstName($data['firstName'])
             ->setLastName($data['lastName']);
 
-        $listErrors = $validator->validate($user);
+        $listErrors = $validator->validate($student);
         if(count($listErrors) > 0) {
             $responsejson = new JsonResponse(["error" => (string)$listErrors], 500);
 
@@ -49,14 +50,14 @@ class AuthController extends AbstractController
 
         try {
             $em->flush();
-            $userManager->updateUser($user, true);
+            $studentManager->updateUser($student, true);
         } catch (\Exception $e) {
             $responsejson = new JsonResponse(["error" => "L'email/username est déjà utilisé !"], 500);
 
             return $responsejson;
         }
 
-        $responsejson = new JsonResponse(["success" => sprintf("%s a bien été inscrit ! ", $user->getUsername())], 201);
+        $responsejson = new JsonResponse(["success" => sprintf("%s a bien été inscrit ! ", $student->getUsername())], 201);
 
         return $responsejson;
 

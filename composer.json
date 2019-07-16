@@ -21,7 +21,8 @@
         "symfony/templating": "4.3.*",
         "symfony/translation": "4.3.*",
         "symfony/validator": "4.3.*",
-        "symfony/yaml": "4.3.*"
+        "symfony/yaml": "4.3.*",
+      "ext-json": "*"
     },
     "require-dev": {
     },
