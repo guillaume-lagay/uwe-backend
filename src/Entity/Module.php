@@ -33,14 +33,14 @@ class Module
     private $acronym;
 
     /**
-     * @ORM\OneToMany(targetEntity="Component", mappedBy="module")
+     * @ORM\ManyToMany(targetEntity="Component")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
      * */
     private $components;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Student", cascade={"persist"}, fetch="EAGER")
+     * @ORM\ManyToMany(targetEntity="Student", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
      * */
@@ -94,12 +94,34 @@ class Module
         return $this;
     }
 
+    public function addComponent(Component $component) {
+        if ($this->components->contains($component)) { return 0; }
+
+        $this->components[] = $component;
+        return 1;
+    }
+
+    public function removeComponent(Component $component) {
+        return $this->components->removeElement($component);
+    }
+
     /**
      * @return mixed
      */
     public function getComponents()
     {
         return $this->components;
+    }
+
+    public function addStudent(Student $student) {
+        if ($this->students->contains($student)) { return 0; }
+
+        $this->students[] = $student;
+        return 1;
+    }
+
+    public function removeStudent(Student $student) {
+        return $this->students->removeElement($student);
     }
 
     /**
@@ -110,20 +132,18 @@ class Module
         return $this->students;
     }
 
+    public function getMean()
+    {
+        $total;
+        $coefficients;
+        foreach ($c as $this->components) {
+            $total += $c->getMean() * $c->getCoefficient();
+            $coefficients += $c->getCoefficient();
+        }
 
+        $mean = $total / $coefficients;
 
-//    public function getMean()
-//    {
-//        $total;
-//        $coefficients;
-//        foreach ($c as $this->components) {
-//            $total += $c->getMean() * $c->getCoefficient();
-//            $coefficients += $c->getCoefficient();
-//        }
-//
-//        $mean = $total / $coefficients;
-//
-//        return $mean;
-//    }
+        return $mean;
+    }
 
 }
