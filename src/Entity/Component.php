@@ -55,4 +55,24 @@ class Component
      * */
     private $marks;
 
+    /**
+     * Component constructor.
+     */
+    public function __construct()
+    {
+        $this->marks = new ArrayCollection();
+    }
+
+
+    public function getMean() {
+        $total = 0;
+        foreach ($m as $this->marks) {
+            $total += $m->getValue();
+        }
+
+        $mean = $total / $this->marks->count();
+
+        return $mean;
+    }
+
 }
