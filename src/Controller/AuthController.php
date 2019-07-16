@@ -21,7 +21,7 @@ class AuthController extends AbstractController
      * @Rest\Post("/register")
      * @return JsonResponse
      */
-    public function register(Request $request, UserManagerInterface $studentManager, ValidatorInterface $validator)
+    public function register(Request $request, UserManagerInterface $userManager, ValidatorInterface $validator)
     {
         $data = json_decode($request->getContent(), true);
 
@@ -50,7 +50,7 @@ class AuthController extends AbstractController
 
         try {
             $em->flush();
-            $studentManager->updateUser($student, true);
+            $userManager->updateUser($student, true);
         } catch (\Exception $e) {
             $responsejson = new JsonResponse(["error" => "L'email/username est déjà utilisé !"], 500);
 
