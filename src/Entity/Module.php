@@ -54,17 +54,81 @@ class Module
     public function __construct()
     {
         $this->components = new ArrayCollection();
+        $this->students = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAcronym()
+    {
+        return $this->acronym;
+    }
+
+    /**
+     * @param mixed $acronym
+     */
+    public function setAcronym($acronym)
+    {
+        $this->acronym = $acronym;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComponents()
+    {
+        return $this->components;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStudents()
+    {
+        return $this->students;
     }
 
 
-//    public function getMean()
-//    {
-//        $mean;
-//        foreach ($c as $components) {
-//            $mean += $c->getMean();
-//        }
-//
-//        $mean = $mean / $components . length();
-//    }
+
+    public function getMean()
+    {
+        $total;
+        $coefficients;
+        foreach ($c as $this->components) {
+            $total += $c->getMean() * $c->getCoefficient();
+            $coefficients += $c->getCoefficient();
+        }
+
+        $mean = $total / $coefficients;
+
+        return $mean;
+    }
 
 }
