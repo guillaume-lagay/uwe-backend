@@ -2,40 +2,58 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
+use Doctrine\ORM\Mapping\InheritanceType;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
+ * @InheritanceType("SINGLE_TABLE")
+ * @DiscriminatorColumn(name="user_type", type="string")
+ * @DiscriminatorMap({"user" = "User", "student" = "Student"})
  * @ORM\Entity
  * @ORM\Table(name="fos_user")
+ *
 */
 class User extends BaseUser
 {
+
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"summary", "details"})
+     * @Serializer\Groups({"student_list","student_detail"})
      */
     protected $id;
 
     /**
+     * @Groups({"student_list","student_detail"})
+     */
+    protected $email;
+
+    /**
      * @ORM\Column(type="string", length=40)
      * @Assert\NotBlank()
+     * @Serializer\Groups({"student_list","student_detail"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=40)
      * @Assert\NotBlank()
+     * @Serializer\Groups({"student_list","student_detail"})
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=80)
      * @Assert\NotBlank()
+     * @Serializer\Groups({"student_detail"})
      */
     private $address;
 
@@ -55,7 +73,7 @@ class User extends BaseUser
     /**
      * @param mixed $id
      */
-    public function setId($id): void
+    public function setId($id)
     {
         $this->id = $id;
     }
