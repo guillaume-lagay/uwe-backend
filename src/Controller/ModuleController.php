@@ -4,7 +4,6 @@ namespace App\Controller;
 
 
 use App\Entity\Module;
-#use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -21,6 +20,14 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class ModuleController extends AbstractController
 {
+    private $serializer;
+
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
+
     /**
      * @Rest\Get("/modules/{id}", name="show_module", requirements={"id" = "\d+"})
      *
@@ -28,7 +35,7 @@ class ModuleController extends AbstractController
      */
     public function showModule(Module $module)
     {
-        $data = $this->get('jms_serializer')->serialize($module, 'json');
+        $data = $this->serializer->serialize($module, 'json');
         $response = new Response($data);
 
         return $response;
