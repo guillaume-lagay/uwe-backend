@@ -22,6 +22,18 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class StudentController extends AbstractController
 {
 
+    private $serializer;
+
+    /**
+     * StudentController constructor.
+     * @param $serializer
+     */
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
+
     /**
      * @Rest\Get("/students")
      */
@@ -30,13 +42,33 @@ class StudentController extends AbstractController
 
         $students = $this->getDoctrine()->getRepository(Student::class)->findAll();
 
-        $data = $serializer->serialize($students, 'json',SerializationContext::create()->setGroups(array('student_list')));
+        $data = $this->serializer->serialize(
+            $students,
+            'json',
+            SerializationContext::create()->setGroups(array('student_list'))
+        );
 
 
         $response = new Response($data);
 
         return $response;
     }
+
+    /**
+     * @Rest\Get("/students/{id},name = "get_student")
+     */
+/*    public function getStudentById(SerializerInterface $serializer)
+    {
+
+        $students = $this->getDoctrine()->getRepository(Student::class)->findAll();
+
+        $data = $this->serializer->serialize($students, 'json',SerializationContext::create()->setGroups(array('student_list')));
+
+
+        $response = new Response($data);
+
+        return $response;
+    }*/
 
 
 
