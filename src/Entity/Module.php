@@ -9,7 +9,6 @@ use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity
- * @ORM\Table
  */
 class Module
 {
@@ -34,7 +33,7 @@ class Module
     private $acronym;
 
     /**
-     * @ORM\OneToMany(targetEntity="Component", mappedBy="modules")
+     * @ORM\OneToMany(targetEntity="Component", mappedBy="module")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
      * */
@@ -47,10 +46,6 @@ class Module
      * */
     private $students;
 
-    /**
-     * Module constructor.
-     * @param $id
-     */
     public function __construct()
     {
         $this->components = new ArrayCollection();
@@ -117,18 +112,18 @@ class Module
 
 
 
-    public function getMean()
-    {
-        $total;
-        $coefficients;
-        foreach ($c as $this->components) {
-            $total += $c->getMean() * $c->getCoefficient();
-            $coefficients += $c->getCoefficient();
-        }
-
-        $mean = $total / $coefficients;
-
-        return $mean;
-    }
+//    public function getMean()
+//    {
+//        $total;
+//        $coefficients;
+//        foreach ($c as $this->components) {
+//            $total += $c->getMean() * $c->getCoefficient();
+//            $coefficients += $c->getCoefficient();
+//        }
+//
+//        $mean = $total / $coefficients;
+//
+//        return $mean;
+//    }
 
 }

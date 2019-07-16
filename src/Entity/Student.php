@@ -10,6 +10,7 @@ use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity
+ * @ORM\Table
  */
 class Student extends User
 {
