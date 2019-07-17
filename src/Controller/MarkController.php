@@ -81,7 +81,7 @@ class MarkController extends AbstractController
         $data = $this->serializer->serialize(
             $marks,
             'json',
-            SerializationContext::create()->setGroups(array('mark_detail','student', 'component'))
+            SerializationContext::create()->setGroups(array('mark','student', 'component', 'mark_detail'))
         );
 
 
@@ -99,7 +99,7 @@ class MarkController extends AbstractController
             throw new NotFoundResourceException("mark not found");
         }
 
-        $data = $this->serializer->serialize($mark, 'json', SerializationContext::create()->setGroups(array('student', 'mark_detail', 'component')));
+        $data = $this->serializer->serialize($mark, 'json', SerializationContext::create()->setGroups(array('mark', 'component', "mark_detail", 'student')));
 
         return new Response($data);
     }

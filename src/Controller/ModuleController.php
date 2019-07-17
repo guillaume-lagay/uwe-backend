@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\Component;
 use App\Entity\Module;
 use App\Entity\Student;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -34,9 +35,10 @@ class ModuleController extends AbstractController
      *
      * @return Response
      */
-    public function showModule(Module $module)
+    public function showModule(Module $module = null)
     {
-        $data = $this->serializer->serialize($module, 'json');
+        $data = $this->serializer->serialize($module, 'json',
+            SerializationContext::create(Module::class)->setGroups(array('module','module_detail','component', 'student')));
         $response = new Response($data);
 
         return $response;
@@ -49,8 +51,9 @@ class ModuleController extends AbstractController
      */
     public function findAllModules()
     {
-       $modules = $this->getDoctrine()->getRepository(Module::class)->findAll();
-        $data = $this->serializer->serialize($modules, 'json');
+        $modules = $this->getDoctrine()->getRepository(Module::class)->findAll();
+        $data = $this->serializer->serialize($modules, 'json',
+            SerializationContext::create(Module::class)->setGroups(array("module")));
         $response = new Response($data);
 
         return $response;
@@ -59,7 +62,7 @@ class ModuleController extends AbstractController
     /**
      *  @Rest\Post("/modules", name="create_module")
      *
-     *  @return JsonResponse
+     * @return Response
      * */
     public function createModule(Request $request, ValidatorInterface $validator)
     {
@@ -79,13 +82,15 @@ class ModuleController extends AbstractController
         $em->persist($module);
         $em->flush();
 
-        return new JsonResponse(["success" => "The module has been created !"], 201);
+        $result = $this->serializer->serialize($module, 'json',
+            SerializationContext::create(Module::class)->setGroups(array("module")));
+        return new Response($result);
     }
 
     /**
      *  @Rest\Put("/modules/{id}", name="edit_module", requirements={"id" = "\d+"})
      *
-     *  @return JsonResponse
+     * @return Response
      * */
     public function editModule(Request $request, ValidatorInterface $validator, Module $module)
     {
@@ -103,7 +108,9 @@ class ModuleController extends AbstractController
         $em->persist($module);
         $em->flush();
 
-        return new JsonResponse(["success" => "The module has been edited !"], 200);
+        $result = $this->serializer->serialize($module, 'json',
+            SerializationContext::create(Module::class)->setGroups(array("module")));
+        return new Response($result);
     }
 
     /**
