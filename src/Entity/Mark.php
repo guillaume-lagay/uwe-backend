@@ -23,7 +23,7 @@ class Mark
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"mark","mark"})
+     * @Serializer\Groups({"mark"})
      */
     private $id;
 
@@ -45,7 +45,7 @@ class Mark
 
     /**
      * @ORM\Column(type="float")
-     * @Serializer\Groups({"mark","mark"})
+     * @Serializer\Groups({"mark"})
      */
     private $value;
 
