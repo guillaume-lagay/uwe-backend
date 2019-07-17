@@ -35,10 +35,10 @@ class ModuleController extends AbstractController
      *
      * @return Response
      */
-    public function showModule(Module $module = null)
+    public function showModule(Module $module)
     {
         $data = $this->serializer->serialize($module, 'json',
-            SerializationContext::create(Module::class)->setGroups(array('module','module_detail', 'component','student')));
+            SerializationContext::create(Module::class)->setGroups(array('module', 'module_detail', 'component', 'student')));
         $response = new Response($data);
 
         return $response;
@@ -53,7 +53,7 @@ class ModuleController extends AbstractController
     {
         $modules = $this->getDoctrine()->getRepository(Module::class)->findAll();
         $data = $this->serializer->serialize($modules, 'json',
-            SerializationContext::create(Module::class)->setGroups(array("module")));
+            SerializationContext::create(Module::class)->setGroups(array("module", "module_detail", "component", "student")));
         $response = new Response($data);
 
         return $response;
