@@ -34,7 +34,7 @@ class AuthController extends AbstractController
 
     /**
      * @Rest\Post("/register")
-     * @return JsonResponse
+     * @return Response
      */
     public function register(Request $request, UserManagerInterface $userManager, ValidatorInterface $validator)
     {
