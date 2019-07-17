@@ -48,7 +48,7 @@ class StudentController extends AbstractController
 
 
 
-        $result = $this->serializer->serialize($user, 'json', SerializationContext::create(User::class)->setGroups(array('student', 'role')));
+        $result = $this->serializer->serialize($user, 'json', SerializationContext::create(User::class)->setGroups(array('student', 'student_role')));
 
         return new Response($result);
     }
@@ -83,7 +83,7 @@ class StudentController extends AbstractController
             throw new NotFoundResourceException("student not found");
         }
 
-        $data = $this->serializer->serialize($student, 'json',SerializationContext::create()->setGroups(array('student')));
+        $data = $this->serializer->serialize($student, 'json',SerializationContext::create()->setGroups(array('student', 'student_detail' , 'module', 'mark')));
 
         $response = new Response($data);
 
