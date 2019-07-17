@@ -36,7 +36,6 @@ class StudentController extends AbstractController
         $this->serializer = $serializer;
     }
 
-
     /**
      * @Rest\Get("/students")
      */

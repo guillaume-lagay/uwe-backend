@@ -22,7 +22,7 @@ class AppFixtures extends Fixture
             ->setEmail('glagay@localhost.fr')
             ->setPlainPassword('glagay')
             ->setEnabled(true)
-            ->setRoles(['ROLE_USER'])
+            ->setRoles(['ROLE_STUDENT'])
             ->setSuperAdmin(false)
             ->setUsername('glagay');
 
