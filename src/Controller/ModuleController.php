@@ -193,8 +193,7 @@ class ModuleController extends AbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
-
-        $module->addComponent($student);
+        
         $em->persist($module);
         $em->flush();
 
@@ -218,7 +217,6 @@ class ModuleController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $module->removeComponent($student);
         $em->persist($module);
         $em->flush();
 
