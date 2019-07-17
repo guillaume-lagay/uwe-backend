@@ -44,7 +44,7 @@ class Module
     private $components;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Student", cascade={"persist"}, mappedBy="modules")
+     * @ORM\ManyToMany(targetEntity="Student", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
      * @Serializer\Groups({"module_detail"})
@@ -121,7 +121,7 @@ class Module
     }
 
     public function addStudent(Student $student) {
-        if ($this->students->contains($student)) { return 0; }
+//        if ($this->students->contains($student)) { return 0; }
 
         $this->students[] = $student;
         return 1;
