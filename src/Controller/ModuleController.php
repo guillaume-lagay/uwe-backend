@@ -59,7 +59,7 @@ class ModuleController extends AbstractController
     /**
      *  @Rest\Post("/modules", name="create_module")
      *
-     *  @return JsonResponse
+     *  @return Response
      * */
     public function createModule(Request $request, ValidatorInterface $validator)
     {
@@ -79,7 +79,8 @@ class ModuleController extends AbstractController
         $em->persist($module);
         $em->flush();
 
-        return new JsonResponse(["success" => "The module has been created !"], 201);
+        $data = $this->serializer->serialize($module, 'json');
+        return new Response($data);
     }
 
     /**
@@ -178,7 +179,6 @@ class ModuleController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $module->addComponent($student);
         $em->persist($module);
         $em->flush();
 
@@ -200,7 +200,6 @@ class ModuleController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
 
-        $module->removeComponent($student);
         $em->persist($module);
         $em->flush();
 
