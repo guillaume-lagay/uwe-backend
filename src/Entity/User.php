@@ -57,6 +57,13 @@ class User extends BaseUser
      */
     private $address;
 
+    /**
+     * @Serializer\Groups({"role"})
+     */
+    protected $roles;
+
+
+
     public function __construct()
     {
         parent::__construct();
