@@ -86,7 +86,7 @@ class ModuleController extends AbstractController
     /**
      *  @Rest\Put("/modules/{id}", name="edit_module", requirements={"id" = "\d+"})
      *
-     *  @return JsonResponse
+     *  @return Response
      * */
     public function editModule(Request $request, ValidatorInterface $validator, Module $module)
     {
@@ -104,7 +104,8 @@ class ModuleController extends AbstractController
         $em->persist($module);
         $em->flush();
 
-        return new JsonResponse(["success" => "The module has been edited !"], 200);
+        $data = $this->serializer->serialize($module, 'json');
+        return new Response($data);
     }
 
     /**
