@@ -84,7 +84,7 @@ class ModuleController extends AbstractController
         $em->flush();
 
         $result = $this->serializer->serialize($module, 'json',
-            SerializationContext::create(Module::class)->setGroups(array("module")));
+            SerializationContext::create(Module::class)->setGroups(array("module", "module_detail", "component", "student")));
         return new Response($result);
     }
 
@@ -111,7 +111,7 @@ class ModuleController extends AbstractController
         $em->flush();
 
         $result = $this->serializer->serialize($module, 'json',
-            SerializationContext::create(Module::class)->setGroups(array("module")));
+            SerializationContext::create(Module::class)->setGroups(array("module", "module_detail", "component", "student")));
         return new Response($result);
     }
 
