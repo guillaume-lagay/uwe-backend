@@ -17,31 +17,35 @@ class Component
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"summary", "details"})
+     * @Serializer\Groups({"component"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=60)
      * @Assert\NotBlank()
+     * @Serializer\Groups({"component"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="decimal")
+     * @Serializer\Groups({"component"})
      */
     private $coefficient;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Module")
+     * @ORM\ManyToOne(targetEntity="Module", inversedBy="components")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
+     * @Serializer\Groups({"component_detail"})
      * */
     private $module;
 
     /**
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
+     * @Serializer\Groups({"component"})
      * @Assert\GreaterThan(
      *     "+30 minutes",
      *     message = "Merci de renseigner une date valable (au moins 30 minutes après la date actuelle)")
@@ -51,6 +55,7 @@ class Component
     /**
      * @ORM\OneToMany(targetEntity="Mark", mappedBy="component")
      * @ORM\JoinColumn(nullable=true)
+     * @Serializer\Groups({"component_detail"})
      * @Assert\Valid()
      * */
     private $marks;
@@ -94,6 +99,16 @@ class Component
     public function getModule()
     {
         return $this->module;
+    }
+
+    /**
+     * @param mixed $module
+     * @return Component
+     */
+    public function setModule($module)
+    {
+        $this->module = $module;
+        return $this;
     }
 
     /**

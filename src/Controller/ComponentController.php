@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Component;
+use App\Entity\Module;
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -33,7 +35,8 @@ class ComponentController extends AbstractController
      */
     public function showComponent(Component $component)
     {
-        $data = $this->serializer->serialize($component, 'json');
+        $data = $this->serializer->serialize($component,'json',
+            SerializationContext::create(Component::class)->setGroups(array("component","component_detail","mark","module")));
         $response = new Response($data);
 
         return $response;
@@ -47,7 +50,8 @@ class ComponentController extends AbstractController
     public function findAllComponents()
     {
         $components = $this->getDoctrine()->getRepository(Component::class)->findAll();
-        $data = $this->serializer->serialize($components, 'json');
+        $data = $this->serializer->serialize($components, 'json',
+            SerializationContext::create(Component::class)->setGroups(array("component")));
         $response = new Response($data);
 
         return $response;
@@ -57,15 +61,19 @@ class ComponentController extends AbstractController
      * @Rest\Post("/components", name="create_component")
      * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can create a component")
      *
-     * @return JsonResponse
+     * @return Response
      **/
     public function createComponent(Request $request, ValidatorInterface $validator)
     {
+        $em = $this->getDoctrine()->getManager();
+
+
         $component = new Component();
         $data = json_decode($request->getContent(), true);
 
         $component->setName($data['name'])
             ->setCoefficient($data['coefficient'])
+            ->setModule($em->getRepository(Module::class)->find($data['module']))
             ->setPassDate(new \DateTime($data['passDate']));
 
         $listErrors = $validator->validate($component);
@@ -74,18 +82,20 @@ class ComponentController extends AbstractController
             return $responsejson;
         }
 
-        $em = $this->getDoctrine()->getManager();
         $em->persist($component);
         $em->flush();
 
-        return new JsonResponse(["success" => "The component has been created !"], 201);
+        $result = $this->serializer->serialize($component, 'json',
+            SerializationContext::create(Component::class)->setGroups(array("component")));
+
+        return new Response($result);
     }
 
     /**
      * @Rest\Put("/components/{id}", name="edit_component", requirements={"id" = "\d+"})
      * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can edit a component")
      *
-     * @return JsonResponse
+     * @return Response
      **/
     public function editComponent(Request $request, ValidatorInterface $validator, Component $component)
     {
@@ -104,7 +114,10 @@ class ComponentController extends AbstractController
         $em->persist($component);
         $em->flush();
 
-        return new JsonResponse(["success" => "The component has been edited !"], 200);
+        $result = $this->serializer->serialize($component, 'json',
+            SerializationContext::create(Component::class)->setGroups(array("component")));
+
+        return new Response($result);
     }
 
 

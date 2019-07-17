@@ -16,33 +16,38 @@ class Module
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"summary", "details"})
+     * @Serializer\Groups({"module"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=60)
      * @Assert\NotBlank()
+     * @Serializer\Groups({"module"})
+     *
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=10)
      * @Assert\NotBlank()
+     * @Serializer\Groups({"module"})
      */
     private $acronym;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Component")
+     * @ORM\OneToMany(targetEntity="Component", mappedBy="module")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
+     * @Serializer\Groups({"module_detail"})
      * */
     private $components;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Student", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Student", cascade={"persist"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
+     * @Serializer\Groups({"module_detail"})
      * */
     private $students;
 
