@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("/api", name="api_")
@@ -37,6 +38,7 @@ class MarkController extends AbstractController
 
     /**
      * @Rest\Post("/marks")
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can add a mark")
      */
     public function createMark(Request $request, ValidatorInterface $validator)
     {
@@ -73,6 +75,7 @@ class MarkController extends AbstractController
 
     /**
      * @Rest\Get("/marks")
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can see all student marks")
      */
     public function getMarks(){
 
@@ -106,6 +109,7 @@ class MarkController extends AbstractController
 
     /**
      * @Rest\Delete("/marks/{id}",name = "delete_mark")
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can remove a mark")
      */
     public function deleteMarkById(Mark $mark = null)
     {
@@ -124,6 +128,7 @@ class MarkController extends AbstractController
     /**
      * @param Mark|null $mark
      * @Rest\Put("/marks/{id}", name = "edit_mark")
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can edit a mark")
      */
     public function editMarkById(Request $request, Mark $mark = null,ValidatorInterface $validator)
     {

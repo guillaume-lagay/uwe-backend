@@ -59,6 +59,7 @@ class ComponentController extends AbstractController
 
     /**
      * @Rest\Post("/components", name="create_component")
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can create a component")
      *
      * @return Response
      **/
@@ -92,6 +93,7 @@ class ComponentController extends AbstractController
 
     /**
      * @Rest\Put("/components/{id}", name="edit_component", requirements={"id" = "\d+"})
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can edit a component")
      *
      * @return Response
      **/
@@ -120,9 +122,10 @@ class ComponentController extends AbstractController
 
 
     /**
-     *  @Rest\Delete("/components/{id}", name="delete_component", requirements={"id" = "\d+"})
+     * @Rest\Delete("/components/{id}", name="delete_component", requirements={"id" = "\d+"})
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can delete a component")
      *
-     *  @return JsonResponse
+     * @return JsonResponse
      * */
     public function removeComponent(Component $component) {
         $em = $this->getDoctrine()->getManager();

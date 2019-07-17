@@ -61,6 +61,7 @@ class ModuleController extends AbstractController
 
     /**
      *  @Rest\Post("/modules", name="create_module")
+     *  @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can create a module")
      *
      * @return Response
      * */
@@ -89,6 +90,7 @@ class ModuleController extends AbstractController
 
     /**
      *  @Rest\Put("/modules/{id}", name="edit_module", requirements={"id" = "\d+"})
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can edit a module")
      *
      * @return Response
      * */
@@ -115,6 +117,7 @@ class ModuleController extends AbstractController
 
     /**
      *  @Rest\Delete("/modules/{id}", name="delete_module", requirements={"id" = "\d+"})
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can delete a module")
      *
      *  @return JsonResponse
      * */
@@ -131,6 +134,8 @@ class ModuleController extends AbstractController
      *
      * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
      * @ParamConverter("component", options={"mapping": {"component_id": "id"}})
+     *
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can add a component on a module")
      *
      * @return Response
      */
@@ -154,6 +159,8 @@ class ModuleController extends AbstractController
      * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
      * @ParamConverter("component", options={"mapping": {"component_id": "id"}})
      *
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can remove a component from a module")
+     *
      * @return Response
      */
     public function removeComponent(Module $module, Component $component) {
@@ -176,6 +183,8 @@ class ModuleController extends AbstractController
      * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
      * @ParamConverter("student", options={"mapping": {"student_id": "id"}})
      *
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can add a student on a module")
+     *
      * @return Response
      */
     public function addStudent(Module $module, Student $student) {
@@ -197,6 +206,8 @@ class ModuleController extends AbstractController
      *
      * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
      * @ParamConverter("student", options={"mapping": {"student_id": "id"}})
+     *
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can remove a student from a module")
      *
      * @return Response
      */

@@ -37,23 +37,6 @@ class StudentController extends AbstractController
     }
 
     /**
-     * @Rest\Get("/auth/user", name="get_user_by_token")
-     *
-     */
-    public function getUserByToken()
-    {
-
-        $user = $this->getUser();
-        $student = $this->getDoctrine()->getRepository(Student::class)->findBy(["username" => $user]);
-
-
-
-        $result = $this->serializer->serialize($user, 'json', SerializationContext::create(User::class)->setGroups(array('student', 'student_role')));
-
-        return new Response($result);
-    }
-
-    /**
      * @Rest\Get("/students")
      */
     public function getStudents()
@@ -71,7 +54,6 @@ class StudentController extends AbstractController
         $response = new Response($data);
 
         return $response;
-
     }
 
     /**
@@ -83,7 +65,7 @@ class StudentController extends AbstractController
             throw new NotFoundResourceException("student not found");
         }
 
-        $data = $this->serializer->serialize($student, 'json',SerializationContext::create()->setGroups(array('student', 'student_detail' , 'module', 'mark')));
+        $data = $this->serializer->serialize($student, 'json',SerializationContext::create()->setGroups(array('student')));
 
         $response = new Response($data);
 
@@ -92,6 +74,7 @@ class StudentController extends AbstractController
 
     /**
      * @Rest\Delete("/students/{id}",name = "delete_student")
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can remove a student")
      */
     public function deleteStudentById(Student $student = null)
     {
@@ -108,9 +91,10 @@ class StudentController extends AbstractController
     }
 
     /**
-     * @Rest\Get("/students/{id}/marks",name = "get_student_marks")
+     * @Rest\Get("/students/{id}/marks",name = "get_student")
+     * @Security("student.getId() == id or is_granted('ROLE_ADMIN')", statusCode=403, message="Only the concerned user can see his marks")
      */
-    public function getStudentMarksByStudentId(Student $student = null)
+    public function getStudentMarksByStudentId(Student $student)
     {
         if (!$student) {
             throw new NotFoundResourceException("student not found");
@@ -126,4 +110,11 @@ class StudentController extends AbstractController
 
         return $response;
     }
+
+
+
+
+
+
+
 }
