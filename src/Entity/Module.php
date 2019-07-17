@@ -44,8 +44,8 @@ class Module
     private $components;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Student", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\ManyToMany(targetEntity="Student", inversedBy="modules")
+     * @ORM\JoinColumn(name="student_module")
      * @Assert\Valid()
      * @Serializer\Groups({"module_detail"})
      * */
