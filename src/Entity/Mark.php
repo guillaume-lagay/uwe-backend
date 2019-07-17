@@ -23,7 +23,7 @@ class Mark
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Serializer\Groups({"summary", "details"})
+     * @Serializer\Groups({"mark","mark_detail"})
      */
     private $id;
 
@@ -31,6 +31,7 @@ class Mark
      * @ORM\ManyToOne(targetEntity="Student", inversedBy="marks")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
+     * @Serializer\Groups({"mark_detail"})
      * */
     private $student;
 
@@ -38,11 +39,13 @@ class Mark
      * @ORM\ManyToOne(targetEntity="Component", inversedBy="marks")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
+     * @Serializer\Groups({"mark_detail"})
      * */
     private $component;
 
     /**
      * @ORM\Column(type="float")
+     * @Serializer\Groups({"mark","mark_detail"})
      */
     private $value;
 
@@ -54,6 +57,51 @@ class Mark
         return $this->id;
     }
 
+    /**
+     * @param mixed $id
+     * @return Mark
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStudent()
+    {
+        return $this->student;
+    }
+
+    /**
+     * @param mixed $student
+     * @return Mark
+     */
+    public function setStudent($student)
+    {
+        $this->student = $student;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getComponent()
+    {
+        return $this->component;
+    }
+
+    /**
+     * @param mixed $component
+     * @return Mark
+     */
+    public function setComponent($component)
+    {
+        $this->component = $component;
+        return $this;
+    }
 
     /**
      * @return mixed
@@ -65,10 +113,12 @@ class Mark
 
     /**
      * @param mixed $value
+     * @return Mark
      */
     public function setValue($value)
     {
         $this->value = $value;
+        return $this;
     }
 
 
