@@ -44,12 +44,14 @@ class Module
     private $components;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Student", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Student", cascade={"persist"}, mappedBy="modules")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
      * @Serializer\Groups({"module_detail"})
      * */
     private $students;
+
+
 
     public function __construct()
     {

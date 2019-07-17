@@ -84,7 +84,7 @@ class MarkController extends AbstractController
         $data = $this->serializer->serialize(
             $marks,
             'json',
-            SerializationContext::create()->setGroups(array('mark','student', 'component', 'mark_detail'))
+            SerializationContext::create()->setGroups(array('mark'))
         );
 
 
@@ -102,7 +102,7 @@ class MarkController extends AbstractController
             throw new NotFoundResourceException("mark not found");
         }
 
-        $data = $this->serializer->serialize($mark, 'json', SerializationContext::create()->setGroups(array('mark', 'component', "mark_detail", 'student')));
+        $data = $this->serializer->serialize($mark, 'json', SerializationContext::create()->setGroups(array('mark', 'mark_detail', 'component', 'student')));
 
         return new Response($data);
     }
@@ -130,7 +130,7 @@ class MarkController extends AbstractController
      * @Rest\Put("/marks/{id}", name = "edit_mark")
      * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can edit a mark")
      */
-    public function editMarkById(Request $request, Mark $mark = null,ValidatorInterface $validator)
+    public function editMarkById(Request $request, ValidatorInterface $validator, Mark $mark = null)
     {
         if (!$mark) {
             throw new NotFoundResourceException("Mark Not found");

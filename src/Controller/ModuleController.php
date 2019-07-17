@@ -53,7 +53,7 @@ class ModuleController extends AbstractController
     {
         $modules = $this->getDoctrine()->getRepository(Module::class)->findAll();
         $data = $this->serializer->serialize($modules, 'json',
-            SerializationContext::create(Module::class)->setGroups(array("module", "module_detail", "component", "student")));
+            SerializationContext::create(Module::class)->setGroups(array("module")));
         $response = new Response($data);
 
         return $response;
@@ -84,7 +84,7 @@ class ModuleController extends AbstractController
         $em->flush();
 
         $result = $this->serializer->serialize($module, 'json',
-            SerializationContext::create(Module::class)->setGroups(array("module", "module_detail", "component", "student")));
+            SerializationContext::create(Module::class)->setGroups(array("module")));
         return new Response($result);
     }
 
@@ -111,7 +111,7 @@ class ModuleController extends AbstractController
         $em->flush();
 
         $result = $this->serializer->serialize($module, 'json',
-            SerializationContext::create(Module::class)->setGroups(array("module", "module_detail", "component", "student")));
+            SerializationContext::create(Module::class)->setGroups(array("module")));
         return new Response($result);
     }
 
@@ -127,54 +127,6 @@ class ModuleController extends AbstractController
         $em->flush();
 
         return new JsonResponse(["success" => "The module has been deleted !"], 200);
-    }
-
-    /**
-     * @Rest\Post("/modules/{module_id}/components/{component_id}", name="add_module_component")
-     *
-     * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
-     * @ParamConverter("component", options={"mapping": {"component_id": "id"}})
-     *
-     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can add a component on a module")
-     *
-     * @return Response
-     */
-    public function addComponent(Module $module, Component $component) {
-        if (!$module->addComponent($component)) {
-            return new JsonResponse(["error" => sprintf('%s is already on the module %s !', $component->getName(), $module->getName())], 200);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $module->addComponent($component);
-        $em->persist($module);
-        $em->flush();
-
-        return new JsonResponse(["success" => sprintf('%s has been added to the module %s !', $component->getName(), $module->getName())], 200);
-    }
-
-    /**
-     * @Rest\Delete("/modules/{module_id}/components/{component_id}", name="remove_module_component")
-     *
-     * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
-     * @ParamConverter("component", options={"mapping": {"component_id": "id"}})
-     *
-     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can remove a component from a module")
-     *
-     * @return Response
-     */
-    public function removeComponent(Module $module, Component $component) {
-        if (!$module->removeComponent($component)) {
-            return new JsonResponse(["error" => sprintf('%s is not on the module %s !', $component->getName(), $module->getName())], 200);
-        }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $module->removeComponent($component);
-        $em->persist($module);
-        $em->flush();
-
-        return new JsonResponse(["success" => sprintf('%s has been removed from the module %s !', $component->getName(), $module->getName())], 200);
     }
 
     /**
@@ -222,5 +174,54 @@ class ModuleController extends AbstractController
 
         return new JsonResponse(["success" => sprintf('The student has been removed from the module %s !', $module->getName())], 200);
     }
+
+
+//    /**
+//     * @Rest\Post("/modules/{module_id}/components/{component_id}", name="add_module_component")
+//     *
+//     * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
+//     * @ParamConverter("component", options={"mapping": {"component_id": "id"}})
+//     *
+//     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can add a component on a module")
+//     *
+//     * @return Response
+//     */
+//    public function addComponent(Module $module, Component $component) {
+//        if (!$module->addComponent($component)) {
+//            return new JsonResponse(["error" => sprintf('%s is already on the module %s !', $component->getName(), $module->getName())], 400);
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $module->addComponent($component);
+//        $em->persist($module);
+//        $em->flush();
+//
+//        return new JsonResponse(["success" => sprintf('%s has been added to the module %s !', $component->getName(), $module->getName())], 400);
+//    }
+//
+//    /**
+//     * @Rest\Delete("/modules/{module_id}/components/{component_id}", name="remove_module_component")
+//     *
+//     * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
+//     * @ParamConverter("component", options={"mapping": {"component_id": "id"}})
+//     *
+//     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can remove a component from a module")
+//     *
+//     * @return Response
+//     */
+//    public function removeComponent(Module $module, Component $component) {
+//        if (!$module->removeComponent($component)) {
+//            return new JsonResponse(["error" => sprintf('%s is not on the module %s !', $component->getName(), $module->getName())], 400);
+//        }
+//
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $module->removeComponent($component);
+//        $em->persist($module);
+//        $em->flush();
+//
+//        return new JsonResponse(["success" => sprintf('%s has been removed from the module %s !', $component->getName(), $module->getName())], 200);
+//    }
 
 }

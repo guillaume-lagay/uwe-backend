@@ -35,14 +35,6 @@ class Component
     private $coefficient;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Module", inversedBy="components")
-     * @ORM\JoinColumn(nullable=true)
-     * @Assert\Valid()
-     * @Serializer\Groups({"component_detail"})
-     * */
-    private $module;
-
-    /**
      * @ORM\Column(type="datetime")
      * @Assert\DateTime()
      * @Serializer\Groups({"component"})
@@ -50,7 +42,16 @@ class Component
      *     "+30 minutes",
      *     message = "Merci de renseigner une date valable (au moins 30 minutes après la date actuelle)")
      */
+
     private $passDate;
+    /**
+     * @ORM\ManyToOne(targetEntity="Module", inversedBy="components")
+     * @ORM\JoinColumn(nullable=true)
+     * @Assert\Valid()
+     * @Serializer\Groups({"component_detail"})
+     * */
+    private $module;
+
 
     /**
      * @ORM\OneToMany(targetEntity="Mark", mappedBy="component")
@@ -59,6 +60,8 @@ class Component
      * @Assert\Valid()
      * */
     private $marks;
+
+
 
     /**
      * Component constructor.
