@@ -58,7 +58,7 @@ class User extends BaseUser
     private $address;
 
     /**
-     * @Serializer\Groups({"student_role"})
+     * @Serializer\Groups({"role"})
      */
     protected $roles;
 

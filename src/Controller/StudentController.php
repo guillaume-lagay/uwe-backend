@@ -37,6 +37,23 @@ class StudentController extends AbstractController
     }
 
     /**
+     * @Rest\Get("/auth/user", name="get_user_by_token")
+     *
+     */
+    public function getUserByToken()
+    {
+
+        $user = $this->getUser();
+        $student = $this->getDoctrine()->getRepository(Student::class)->findBy(["username" => $user]);
+
+
+
+        $result = $this->serializer->serialize($user, 'json', SerializationContext::create(User::class)->setGroups(array('student', 'role')));
+
+        return new Response($result);
+    }
+
+    /**
      * @Rest\Get("/students")
      */
     public function getStudents()
@@ -54,6 +71,7 @@ class StudentController extends AbstractController
         $response = new Response($data);
 
         return $response;
+
     }
 
     /**
@@ -91,10 +109,10 @@ class StudentController extends AbstractController
     }
 
     /**
-     * @Rest\Get("/students/{id}/marks",name = "get_student")
+     * @Rest\Get("/students/{id}/marks",name = "get_student_marks")
      * @Security("student.getId() == id or is_granted('ROLE_ADMIN')", statusCode=403, message="Only the concerned user can see his marks")
      */
-    public function getStudentMarksByStudentId(Student $student)
+    public function getStudentMarksByStudentId(Student $student = null)
     {
         if (!$student) {
             throw new NotFoundResourceException("student not found");
