@@ -64,7 +64,7 @@ class StudentController extends AbstractController
         $data = $this->serializer->serialize(
             $students,
             'json',
-            SerializationContext::create()->setGroups(array('student', 'student_detail', 'mark', 'module'))
+            SerializationContext::create()->setGroups(array('student'))
         );
 
 
