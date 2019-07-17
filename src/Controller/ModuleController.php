@@ -38,7 +38,7 @@ class ModuleController extends AbstractController
     public function showModule(Module $module = null)
     {
         $data = $this->serializer->serialize($module, 'json',
-            SerializationContext::create(Module::class)->setGroups(array('module','module_detail', 'component','student')));
+            SerializationContext::create(Module::class)->setGroups(array('module','module_detail','component', 'student')));
         $response = new Response($data);
 
         return $response;
