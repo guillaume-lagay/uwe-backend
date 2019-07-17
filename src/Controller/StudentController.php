@@ -76,7 +76,7 @@ class StudentController extends AbstractController
     /**
      * @Rest\Delete("/students/{id}",name = "delete_student")
      */
-    public function deleteStudetById(Student $student = null)
+    public function deleteStudentById(Student $student = null)
     {
         if (!$student) {
             throw new NotFoundResourceException("student not found");
