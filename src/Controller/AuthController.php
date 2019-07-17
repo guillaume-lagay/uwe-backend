@@ -20,7 +20,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class AuthController extends AbstractController
 {
     private $serializer;
-    private $security;
 
     /**
      * AuthController constructor.
@@ -53,8 +52,8 @@ class AuthController extends AbstractController
             ->setRoles(['ROLE_STUDENT'])
             ->setSuperAdmin(false)
             ->setAddress($data['address'])
-            ->setFirstName($data['firstName'])
-            ->setLastName($data['lastName']);
+            ->setFirstName($data['first_name'])
+            ->setLastName($data['last_name']);
 
         $listErrors = $validator->validate($student);
         if(count($listErrors) > 0) {
