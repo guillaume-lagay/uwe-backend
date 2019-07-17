@@ -9,7 +9,6 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity\User;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +20,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class AuthController extends AbstractController
 {
     private $serializer;
+    private $security;
 
     /**
      * AuthController constructor.
@@ -50,7 +50,7 @@ class AuthController extends AbstractController
             ->setPlainPassword($data['password'])
             ->setEmail($data['email'])
             ->setEnabled(true)
-            ->setRoles(['ROLE_USER'])
+            ->setRoles(['ROLE_STUDENT'])
             ->setSuperAdmin(false)
             ->setAddress($data['address'])
             ->setFirstName($data['firstName'])
@@ -69,10 +69,10 @@ class AuthController extends AbstractController
 
         } catch (\Exception $e) {
 
-            return new JsonResponse(["error" => "L'email/username est déjà utilisé !"], 403);
+            return new JsonResponse(["error" => "email/username already used"], 403);
         }
 
-        $data = $this->serializer->serialize($student, 'json',SerializationContext::create()->setGroups(array('student_detail')));
+        $data = $this->serializer->serialize($student, 'json',SerializationContext::create()->setGroups(array('student')));
 
         return new Response($data);
 
