@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Component;
 use App\Entity\Module;
+use App\Entity\Student;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -14,11 +15,11 @@ class AppFixtures extends Fixture
     {
         ############## LOADING USERS ##############
 
-        $user = new User();
+        $user = new Student();
         $user->setAddress('UWE Frenchay Campus')
             ->setFirstName('Dorian')
             ->setLastName('LAGAY')
-            ->setEmail('glagay@localhost')
+            ->setEmail('glagay@localhost.fr')
             ->setPlainPassword('glagay')
             ->setEnabled(true)
             ->setRoles(['ROLE_USER'])
@@ -31,7 +32,7 @@ class AppFixtures extends Fixture
         $admin->setAddress('UWE Frenchay Campus')
             ->setFirstName('admin')
             ->setLastName('admin')
-            ->setEmail('admin@localhost')
+            ->setEmail('admin@localhost.fr')
             ->setPlainPassword('admin')
             ->setEnabled(true)
             ->setSuperAdmin(true)
