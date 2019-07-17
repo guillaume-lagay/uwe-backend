@@ -34,7 +34,7 @@ class Module
     private $acronym;
 
     /**
-     * @ORM\OneToMany(targetEntity="Component", mappedBy="modules")
+     * @ORM\OneToMany(targetEntity="Component", mappedBy="module")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
      * */
