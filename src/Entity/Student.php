@@ -23,7 +23,7 @@ class Student extends User
     private $marks;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Module", cascade={"persist"}, inversedBy="students")
+     * @ORM\ManyToMany(targetEntity="Module", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
      * @Serializer\Groups({"student_detail"})

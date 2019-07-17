@@ -21,8 +21,6 @@ use JMS\Serializer\Annotation as Serializer;
 */
 class User extends BaseUser
 {
-
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
