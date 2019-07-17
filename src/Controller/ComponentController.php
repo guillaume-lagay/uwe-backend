@@ -73,8 +73,8 @@ class ComponentController extends AbstractController
 
         $component->setName($data['name'])
             ->setCoefficient($data['coefficient'])
-            ->setModule($em->getRepository(Module::class)->find($data['moduleId']))
-            ->setPassDate(new \DateTime($data['passDate']));
+            ->setModule($em->getRepository(Module::class)->find($data['module_id']))
+            ->setPassDate(new \DateTime($data['pass_date']));
 
         $listErrors = $validator->validate($component);
         if(count($listErrors) > 0) {
@@ -103,7 +103,7 @@ class ComponentController extends AbstractController
 
         $component->setName($data['name'])
             ->setCoefficient($data['coefficient'])
-            ->setPassDate(new \DateTime($data['passDate']));
+            ->setPassDate(new \DateTime($data['pass_date']));
 
         $listErrors = $validator->validate($component);
         if(count($listErrors) > 0) {
