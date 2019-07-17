@@ -36,6 +36,22 @@ class StudentController extends AbstractController
         $this->serializer = $serializer;
     }
 
+    /**
+     * @Rest\Get("/auth/user", name="get_user_by_token")
+     *
+     */
+    public function getUserByToken()
+    {
+
+        $user = $this->getUser();
+        $student = $this->getDoctrine()->getRepository(Student::class)->findBy(["username" => $user]);
+
+
+
+        $result = $this->serializer->serialize($user, 'json', SerializationContext::create(User::class)->setGroups(array('student', 'role')));
+
+        return new Response($result);
+    }
 
     /**
      * @Rest\Get("/students")
@@ -55,6 +71,7 @@ class StudentController extends AbstractController
         $response = new Response($data);
 
         return $response;
+
     }
 
     /**
@@ -91,7 +108,7 @@ class StudentController extends AbstractController
     }
 
     /**
-     * @Rest\Get("/students/{id}/marks",name = "get_student")
+     * @Rest\Get("/students/{id}/marks",name = "get_student_marks")
      */
     public function getStudentMarksByStudentId(Student $student = null)
     {
@@ -109,11 +126,4 @@ class StudentController extends AbstractController
 
         return $response;
     }
-
-
-
-
-
-
-
 }

@@ -6,6 +6,7 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\Controller\Annotations as FOSRest;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\OAuthServerBundle\Model\ClientManagerInterface;
+
 class SecurityController extends FOSRestController
 {
     private $client_manager;
