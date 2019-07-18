@@ -60,6 +60,13 @@ class MarkController extends AbstractController
             return new JsonResponse(["error" => sprintf('%s %s is not registered on the %s module', $student->getFirstName(), $student->getLastName(), $component->getModule()->getName())], 500);
         }
 
+        $component_marks = $component->getMarks();
+        foreach ($component_marks as $m) {
+            if ($m->getStudent() == $student) {
+                return new JsonResponse(["error" => 'This student already has a mark on this module'], 500);
+            }
+        }
+
         $mark->setValue($data['value'])
             ->setComponent($component)
             ->setStudent($student);
