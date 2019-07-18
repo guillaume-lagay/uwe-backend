@@ -3,9 +3,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Component;
 use App\Entity\Mark;
 use App\Entity\Module;
 use App\Entity\Student;
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\RestBundle\View\View;
 use FOS\UserBundle\Model\UserManagerInterface;
 use JMS\Serializer\SerializationContext;
@@ -131,14 +133,31 @@ class StudentController extends AbstractController
     }
 
     /**
-     * @Rest\Get("/students/{id}/modules/marks",name="get_marks_by_student_and_module")
+     * @Rest\Get("/students/{id}/modules/components",name="get_marks_by_student_and_module")
      * @Security("student.getId() == id or is_granted('ROLE_ADMIN')", statusCode=403, message="Only the concerned user can see his marks")
      */
-    public function getMarksByStudentAndModules(Student $student)
+    public function getComponentsByStudentId(Student $student)
     {
         if (!$student) {
             throw new NotFoundResourceException("student not found");
         }
+        $em = $this->getDoctrine()->getManager();
+
+
+        $modules = /*$em->getRepository(Module::class)->findBy(['students' => $student->getId()]);*/$student->getModules();
+
+        $components = new ArrayCollection();
+
+
+        foreach ($modules as $module) {
+            $components->add($module->getComponents());
+        }
+
+
+        $data = $this->serializer->serialize($components, 'json',SerializationContext::create(Component::class)->setGroups(array('component')));
+
+        return new Response($data);
+
 
     }
 }
