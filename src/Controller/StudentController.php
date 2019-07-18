@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Entity\Mark;
+use App\Entity\Module;
 use App\Entity\Student;
 use FOS\RestBundle\View\View;
 use FOS\UserBundle\Model\UserManagerInterface;
@@ -122,10 +123,22 @@ class StudentController extends AbstractController
 
         $data = $em->getRepository(Mark::class)->findBy(["student" => $student->getId()]);
 
-        $json_data = $this->serializer->serialize($data, "json",SerializationContext::create()->setGroups(array('mark')));
+        $json_data = $this->serializer->serialize($data, "json",SerializationContext::create()->setGroups(array('mark','mark_component','component','component_module','module')));
 
         $response = new Response($json_data);
 
         return $response;
+    }
+
+    /**
+     * @Rest\Get("/students/{id}/modules/marks",name="get_marks_by_student_and_module")
+     * @Security("student.getId() == id or is_granted('ROLE_ADMIN')", statusCode=403, message="Only the concerned user can see his marks")
+     */
+    public function getMarksByStudentAndModules(Student $student)
+    {
+        if (!$student) {
+            throw new NotFoundResourceException("student not found");
+        }
+
     }
 }
