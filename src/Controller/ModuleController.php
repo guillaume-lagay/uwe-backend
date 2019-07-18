@@ -63,8 +63,8 @@ class ModuleController extends AbstractController
     }
 
     /**
-     *  @Rest\Post("/modules", name="create_module")
-     *  @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can create a module")
+     * @Rest\Post("/modules", name="create_module")
+     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can create a module")
      *
      * @return Response
      * */
@@ -77,7 +77,7 @@ class ModuleController extends AbstractController
             ->setAcronym($data['acronym']);
 
         $listErrors = $validator->validate($module);
-        if(count($listErrors) > 0) {
+        if (count($listErrors) > 0) {
             $responsejson = new JsonResponse(["error" => (string)$listErrors], 500);
             return $responsejson;
         }
@@ -92,7 +92,7 @@ class ModuleController extends AbstractController
     }
 
     /**
-     *  @Rest\Put("/modules/{id}", name="edit_module", requirements={"id" = "\d+"})
+     * @Rest\Put("/modules/{id}", name="edit_module", requirements={"id" = "\d+"})
      * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can edit a module")
      *
      * @return Response
@@ -105,7 +105,7 @@ class ModuleController extends AbstractController
             ->setAcronym($data['acronym']);
 
         $listErrors = $validator->validate($module);
-        if(count($listErrors) > 0) {
+        if (count($listErrors) > 0) {
             return new JsonResponse(["error" => (string)$listErrors], 500);
         }
 
@@ -119,12 +119,13 @@ class ModuleController extends AbstractController
     }
 
     /**
-     *  @Rest\Delete("/modules/{id}", name="delete_module", requirements={"id" = "\d+"})
+     * @Rest\Delete("/modules/{id}", name="delete_module", requirements={"id" = "\d+"})
      * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can delete a module")
      *
-     *  @return JsonResponse
+     * @return JsonResponse
      * */
-    public function removeModule(Module $module) {
+    public function removeModule(Module $module)
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($module);
         $em->flush();
@@ -142,13 +143,14 @@ class ModuleController extends AbstractController
      *
      * @return Response
      */
-    public function addStudent(Module $module, Student $student) {
+    public function addStudent(Module $module, Student $student)
+    {
         if (!$module->addStudent($student)) {
             return new JsonResponse(["error" => sprintf('This student is already on the module %s !', $module->getName())], 200);
         }
 
         $em = $this->getDoctrine()->getManager();
-        
+
         $em->persist($module);
         $em->flush();
 
@@ -165,7 +167,8 @@ class ModuleController extends AbstractController
      *
      * @return Response
      */
-    public function removeStudent(Module $module, Student $student) {
+    public function removeStudent(Module $module, Student $student)
+    {
         if (!$module->removeStudent($student)) {
             return new JsonResponse(["error" => sprintf('The student is not on the module %s !', $module->getName())], 200);
         }
@@ -182,11 +185,12 @@ class ModuleController extends AbstractController
     /**
      * @Rest\Get("/modules/mean", name="get_modules_mean")
      */
-    public function getMeanByModule() {
+    public function getMeanByModule()
+    {
         $modules = $this->getDoctrine()->getRepository(Module::class)->findAll();
 
         $means = [];
-        foreach($modules as $module) {
+        foreach ($modules as $module) {
             $means[$module->getName()]['mean'] = $module->getMean();
             $means[$module->getName()]['id'] = $module->getId();
             $means[$module->getName()]['name'] = $module->getName();
@@ -200,7 +204,8 @@ class ModuleController extends AbstractController
      * @Rest\Get("/students/{id}/mean", name="get_students_mean_by_modules")
      * @return Response
      */
-    public function getMeansByStudent(Student $student) {
+    public function getMeansByStudent(Student $student)
+    {
         $marks = $student->getMarks();
         $modules = $student->getModules();
 
@@ -230,4 +235,46 @@ class ModuleController extends AbstractController
         return new Response(json_encode($means));
     }
 
+    /**
+     * @Rest\Get("/modules/{module_id}/students/{student_id}/mean")
+     *
+     * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
+     * @ParamConverter("student", options={"mapping": {"student_id": "id"}})
+     *
+     * @param Module $module
+     * @param Student $student
+     * @return Response
+     */
+    public function getMeanByModuleAndStudent(Module $module, Student $student)
+    {
+        if (!$module->getStudents()->contains($student)) {
+            return new JsonResponse(["error" => "This student is not registered on this module"]);
+        }
+
+        $mean = 0;
+        $marks = $student->getMarks();
+        $modules_mark = 0;
+        $coefficients = 0;
+
+        foreach ($marks as $mark) {
+            if ($module->getComponents()->contains($mark->getComponent())) {
+                $modules_mark += $mark->getValue() * $mark->getComponent()->getCoefficient();
+                $coefficients += $mark->getComponent()->getCoefficient();
+            }
+        }
+
+        if ($coefficients == 0) {
+            $mean = null;
+        } else {
+            $mean = $modules_mark / $coefficients;
+        }
+
+        $data = [];
+        $data['mean'] = $mean;
+        $data['module_id'] = $module->getId();
+        $data['name'] = $module->getName();
+
+        return new Response(json_encode($data));
+
+    }
 }
