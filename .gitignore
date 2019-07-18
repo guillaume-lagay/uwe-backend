@@ -9,4 +9,5 @@
 .idea/
 .env
 *.lock
+.scannerwork
 ###< symfony/framework-bundle ###
