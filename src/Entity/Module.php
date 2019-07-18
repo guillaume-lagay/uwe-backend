@@ -51,8 +51,6 @@ class Module
      * */
     private $students;
 
-
-
     public function __construct()
     {
         $this->components = new ArrayCollection();
@@ -73,6 +71,27 @@ class Module
     public function getName()
     {
         return $this->name;
+    }
+
+
+    /**
+     * @param mixed $components
+     * @return Module
+     */
+    public function setComponents($components)
+    {
+        $this->components = $components;
+        return $this;
+    }
+
+    /**
+     * @param mixed $students
+     * @return Module
+     */
+    public function setStudents($students)
+    {
+        $this->students = $students;
+        return $this;
     }
 
     /**

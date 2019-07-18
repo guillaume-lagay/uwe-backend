@@ -48,7 +48,7 @@ class Component
      * @ORM\ManyToOne(targetEntity="Module", inversedBy="components")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
-     * @Serializer\Groups({"component_detail"})
+     * @Serializer\Groups({"component_detail", "component_module"})
      * */
     private $module;
 
@@ -56,7 +56,7 @@ class Component
     /**
      * @ORM\OneToMany(targetEntity="Mark", mappedBy="component")
      * @ORM\JoinColumn(nullable=true)
-     * @Serializer\Groups({"component_detail"})
+     * @Serializer\Groups({"component_detail", "component_mark"})
      * @Assert\Valid()
      * */
     private $marks;

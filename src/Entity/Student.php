@@ -28,4 +28,42 @@ class Student extends User
      * @Serializer\Groups({"student_detail"})
      * */
     private $modules;
+
+    /**
+     * @return mixed
+     */
+    public function getMarks()
+    {
+        return $this->marks;
+    }
+
+    /**
+     * @param mixed $marks
+     * @return Student
+     */
+    public function setMarks($marks)
+    {
+        $this->marks = $marks;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModules()
+    {
+        return $this->modules;
+    }
+
+    /**
+     * @param mixed $modules
+     * @return Student
+     */
+    public function setModules($modules)
+    {
+        $this->modules = $modules;
+        return $this;
+    }
+
+
 }
