@@ -160,11 +160,15 @@ class Module
 
     public function getMean()
     {
-        $total;
-        $coefficients;
-        foreach ($c as $this->components) {
+        $total = 0;
+        $coefficients = 0;
+        foreach ($this->components as $c) {
             $total += $c->getMean() * $c->getCoefficient();
             $coefficients += $c->getCoefficient();
+        }
+
+        if ($coefficients == 0) {
+            return 0;
         }
 
         $mean = $total / $coefficients;

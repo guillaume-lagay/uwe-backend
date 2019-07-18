@@ -6,6 +6,8 @@ namespace App\Controller;
 use App\Entity\Component;
 use App\Entity\Module;
 use App\Entity\Student;
+use App\Entity\Mark;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -52,6 +54,7 @@ class ModuleController extends AbstractController
     public function findAllModules()
     {
         $modules = $this->getDoctrine()->getRepository(Module::class)->findAll();
+
         $data = $this->serializer->serialize($modules, 'json',
             SerializationContext::create(Module::class)->setGroups(array('module', 'module_detail', 'component', 'student')));
         $response = new Response($data);
@@ -176,52 +179,55 @@ class ModuleController extends AbstractController
     }
 
 
-//    /**
-//     * @Rest\Post("/modules/{module_id}/components/{component_id}", name="add_module_component")
-//     *
-//     * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
-//     * @ParamConverter("component", options={"mapping": {"component_id": "id"}})
-//     *
-//     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can add a component on a module")
-//     *
-//     * @return Response
-//     */
-//    public function addComponent(Module $module, Component $component) {
-//        if (!$module->addComponent($component)) {
-//            return new JsonResponse(["error" => sprintf('%s is already on the module %s !', $component->getName(), $module->getName())], 400);
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $module->addComponent($component);
-//        $em->persist($module);
-//        $em->flush();
-//
-//        return new JsonResponse(["success" => sprintf('%s has been added to the module %s !', $component->getName(), $module->getName())], 400);
-//    }
-//
-//    /**
-//     * @Rest\Delete("/modules/{module_id}/components/{component_id}", name="remove_module_component")
-//     *
-//     * @ParamConverter("module", options={"mapping": {"module_id": "id"}})
-//     * @ParamConverter("component", options={"mapping": {"component_id": "id"}})
-//     *
-//     * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can remove a component from a module")
-//     *
-//     * @return Response
-//     */
-//    public function removeComponent(Module $module, Component $component) {
-//        if (!$module->removeComponent($component)) {
-//            return new JsonResponse(["error" => sprintf('%s is not on the module %s !', $component->getName(), $module->getName())], 400);
-//        }
-//
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $module->removeComponent($component);
-//        $em->persist($module);
-//        $em->flush();
-//
-//        return new JsonResponse(["success" => sprintf('%s has been removed from the module %s !', $component->getName(), $module->getName())], 200);
-//    }
+    /**
+     * @Rest\Get("/modules/mean", name="get_modules_mean")
+     */
+    public function getMeanByModule() {
+        $modules = $this->getDoctrine()->getRepository(Module::class)->findAll();
+
+        $means = [];
+        foreach($modules as $module) {
+            $means[$module->getName()]['mean'] = $module->getMean();
+            $means[$module->getName()]['id'] = $module->getId();
+            $means[$module->getName()]['name'] = $module->getName();
+        }
+
+        return new Response(json_encode($means));
+    }
+
+
+    /**
+     * @Rest\Get("/students/{id}/mean", name="get_students_mean_by_modules")
+     * @return Response
+     */
+    public function getMeansByStudent(Student $student) {
+        $marks = $student->getMarks();
+        $modules = $student->getModules();
+
+        $means = [];
+        foreach ($modules as $module) {
+            $modules_mark = 0;
+            $coefficients = 0;
+            foreach ($marks as $mark) {
+
+                if ($module->getComponents()->contains($mark->getComponent())) {
+                    $modules_mark += $mark->getValue() * $mark->getComponent()->getCoefficient();
+                    $coefficients += $mark->getComponent()->getCoefficient();
+                }
+
+                if ($coefficients == 0) {
+                    $mean = null;
+                } else {
+                    $mean = $modules_mark / $coefficients;
+                }
+
+                $means[$module->getName()]['mean'] = $mean;
+                $means[$module->getName()]['id'] = $module->getId();
+                $means[$module->getName()]['name'] = $module->getName();
+            }
+        }
+
+        return new Response(json_encode($means));
+    }
 
 }
