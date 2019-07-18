@@ -36,7 +36,7 @@ class Module
     private $acronym;
 
     /**
-     * @ORM\OneToMany(targetEntity="Component", mappedBy="module")
+     * @ORM\OneToMany(targetEntity="Component", mappedBy="module", cascade="remove")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
      * @Serializer\Groups({"module_detail"})
