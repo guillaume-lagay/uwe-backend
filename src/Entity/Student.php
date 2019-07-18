@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as Serializer;
 class Student extends User
 {
     /**
-     * @ORM\OneToMany(targetEntity="Mark", mappedBy="student")
+     * @ORM\OneToMany(targetEntity="Mark", mappedBy="student", cascade="remove")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
      * @Serializer\Groups({"student_detail"})

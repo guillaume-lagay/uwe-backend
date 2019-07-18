@@ -17,11 +17,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity
  * @ORM\Table
- * @UniqueEntity(
- *     fields={"student", "component"},
- *     errorPath="student",
- *     message="This student already has a mark on this component"
- * )
  */
 class Mark
 {
