@@ -42,21 +42,27 @@ class MarkController extends AbstractController
      */
     public function createMark(Request $request, ValidatorInterface $validator)
     {
-
         $em = $this->getDoctrine()->getManager();
-
 
         $mark = new Mark();
 
         $data = json_decode($request->getContent(),true);
 
+        if (!$component = $em->getRepository(Component::class)->find($data['component'])) {
+            return new JsonResponse(["error" => 'This component was not found'], 404);
+        }
+
+        if (!$student = $em->getRepository(Student::class)->find($data['student'])) {
+            return new JsonResponse(["error" => 'This student was not found'], 404);
+        }
+
+        if (!$component->getModule()->getStudents()->contains($student)) {
+            return new JsonResponse(["error" => sprintf('%s %s is not registered on the %s module', $student->getFirstName(), $student->getLastName(), $component->getModule()->getName())], 500);
+        }
+
         $mark->setValue($data['value'])
-            ->setComponent(
-                $em->getRepository(Component::class)->find($data['component'])
-            )
-            ->setStudent(
-                $em->getRepository(Student::class)->find($data['student'])
-            );
+            ->setComponent($component)
+            ->setStudent($student);
 
         $listErrors = $validator->validate($mark);
         if(count($listErrors) > 0) {
