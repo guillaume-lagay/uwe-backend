@@ -54,7 +54,7 @@ class Component
 
 
     /**
-     * @ORM\OneToMany(targetEntity="Mark", mappedBy="component")
+     * @ORM\OneToMany(targetEntity="Mark", mappedBy="component", cascade="remove")
      * @ORM\JoinColumn(nullable=true)
      * @Serializer\Groups({"component_detail", "component_mark"})
      * @Assert\Valid()
