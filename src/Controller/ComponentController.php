@@ -37,9 +37,7 @@ class ComponentController extends AbstractController
     {
         $data = $this->serializer->serialize($component,'json',
             SerializationContext::create(Component::class)->setGroups(array("component",'component_detail','module',"mark")));
-        $response = new Response($data);
-
-        return $response;
+        return new Response($data);
     }
 
     /**
@@ -51,9 +49,7 @@ class ComponentController extends AbstractController
     {
         $data = $this->serializer->serialize($component,'json',
             SerializationContext::create(Component::class)->setGroups(array("component","component_detail","mark","module","mark_detail","student")));
-        $response = new Response($data);
-
-        return $response;
+        return new Response($data);
     }
 
 
@@ -68,9 +64,7 @@ class ComponentController extends AbstractController
         $components = $this->getDoctrine()->getRepository(Component::class)->findAll();
         $data = $this->serializer->serialize($components, 'json',
             SerializationContext::create(Component::class)->setGroups(array("component")));
-        $response = new Response($data);
-
-        return $response;
+        return new Response($data);
     }
 
     /**
@@ -94,8 +88,7 @@ class ComponentController extends AbstractController
 
         $listErrors = $validator->validate($component);
         if(count($listErrors) > 0) {
-            $responsejson = new JsonResponse(["error" => (string)$listErrors], 500);
-            return $responsejson;
+            return new JsonResponse(["error" => (string)$listErrors], 500);
         }
 
         $em->persist($component);
