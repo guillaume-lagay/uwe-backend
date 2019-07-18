@@ -45,7 +45,7 @@ class Module
 
     /**
      * @ORM\ManyToMany(targetEntity="Student", inversedBy="modules")
-     * @ORM\JoinColumn(name="student_module")
+     * @ORM\JoinColumn(name="module_students")
      * @Assert\Valid()
      * @Serializer\Groups({"module_detail"})
      * */
