@@ -36,11 +36,27 @@ class ComponentController extends AbstractController
     public function showComponent(Component $component)
     {
         $data = $this->serializer->serialize($component,'json',
-            SerializationContext::create(Component::class)->setGroups(array("component","component_detail","mark","module")));
+            SerializationContext::create(Component::class)->setGroups(array("component",'component_detail','module',"mark")));
         $response = new Response($data);
 
         return $response;
     }
+
+    /**
+     * @Rest\Get("/components/{id}/marks/students", name="get_component_with_marks_and_student_by_id", requirements={"id" = "\d+"})
+     *
+     * @return Response
+     */
+    public function getComponentByIdWithMarkAndStudent(Component $component)
+    {
+        $data = $this->serializer->serialize($component,'json',
+            SerializationContext::create(Component::class)->setGroups(array("component","component_detail","mark","module","mark_detail","student")));
+        $response = new Response($data);
+
+        return $response;
+    }
+
+
 
     /**
      * @Rest\Get("/components", name="components_list")

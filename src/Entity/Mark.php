@@ -31,7 +31,7 @@ class Mark
      * @ORM\ManyToOne(targetEntity="Student", inversedBy="marks")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
-     * @Serializer\Groups({"mark_detail"})
+     * @Serializer\Groups({"mark_student","mark_detail"})
      * */
     private $student;
 
@@ -39,7 +39,7 @@ class Mark
      * @ORM\ManyToOne(targetEntity="Component", inversedBy="marks")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
-     * @Serializer\Groups({"mark_detail"})
+     * @Serializer\Groups({"mark_component","mark_detail"})
      * */
     private $component;
 
