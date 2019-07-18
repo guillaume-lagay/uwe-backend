@@ -7,6 +7,7 @@ use App\Entity\Component;
 use App\Entity\Mark;
 use App\Entity\Module;
 use App\Entity\Student;
+use App\Exception\ResourceValidationException;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\RestBundle\View\View;
 use FOS\UserBundle\Model\UserManagerInterface;
@@ -79,11 +80,12 @@ class StudentController extends AbstractController
 
     /**
      * @Rest\Get("/students/{id}",name = "get_student")
+     * @throws ResourceValidationException
      */
     public function getStudentById(Student $student = null)
     {
         if (!$student) {
-            throw new NotFoundResourceException("student not found");
+            throw new ResourceValidationException("student not found");
         }
 
         $data = $this->serializer->serialize($student, 'json',

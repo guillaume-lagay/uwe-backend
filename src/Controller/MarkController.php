@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Component;
 use App\Entity\Mark;
 use App\Entity\Student;
+use App\Exception\ResourceValidationException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,6 +40,7 @@ class MarkController extends AbstractController
     /**
      * @Rest\Post("/marks")
      * @Security("is_granted('ROLE_ADMIN')", statusCode=403, message="Only an administrator can add a mark")
+     * @throws ResourceValidationException
      */
     public function createMark(Request $request, ValidatorInterface $validator)
     {
@@ -49,11 +51,11 @@ class MarkController extends AbstractController
         $data = json_decode($request->getContent(),true);
 
         if (!$component = $em->getRepository(Component::class)->find($data['component'])) {
-            return new JsonResponse(["error" => 'This component was not found'], 404);
+            throw new ResourceValidationException("component not found");
         }
 
         if (!$student = $em->getRepository(Student::class)->find($data['student'])) {
-            return new JsonResponse(["error" => 'This student was not found'], 404);
+            throw new ResourceValidationException("student not found");
         }
 
         if (!$component->getModule()->getStudents()->contains($student)) {
