@@ -158,8 +158,12 @@ class Component
 
     public function getMean() {
         $total = 0;
-        foreach ($m as $this->marks) {
+        foreach ($this->marks as $m) {
             $total += $m->getValue();
+        }
+
+        if ($this->marks->count() == 0) {
+            return 0;
         }
 
         $mean = $total / $this->marks->count();
