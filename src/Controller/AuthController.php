@@ -57,9 +57,7 @@ class AuthController extends AbstractController
 
         $listErrors = $validator->validate($student);
         if(count($listErrors) > 0) {
-            $responsejson = new JsonResponse(["error" => (string)$listErrors], 400);
-
-            return $responsejson;
+            return new JsonResponse(["error" => (string)$listErrors], 400);
         }
 
         try {
