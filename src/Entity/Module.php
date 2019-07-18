@@ -43,6 +43,14 @@ class Module
      * */
     private $components;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Student", inversedBy="modules")
+     * @ORM\JoinColumn(name="student_module")
+     * @Assert\Valid()
+     * @Serializer\Groups({"module_detail"})
+     * */
+    private $students;
+
     public function __construct()
     {
         $this->components = new ArrayCollection();
@@ -65,13 +73,6 @@ class Module
         return $this->name;
     }
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Student", inversedBy="modules")
-     * @ORM\JoinColumn(name="student_module")
-     * @Assert\Valid()
-     * @Serializer\Groups({"module_detail"})
-     * */
-    private $students;
 
     /**
      * @param mixed $components
