@@ -121,7 +121,7 @@ class Module
     }
 
     public function addStudent(Student $student) {
-//        if ($this->students->contains($student)) { return 0; }
+        if ($this->students->contains($student)) { return 0; }
 
         $this->students[] = $student;
         return 1;
