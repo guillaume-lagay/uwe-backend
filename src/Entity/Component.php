@@ -48,7 +48,7 @@ class Component
      * @ORM\ManyToOne(targetEntity="Module", inversedBy="components")
      * @ORM\JoinColumn(nullable=true)
      * @Assert\Valid()
-     * @Serializer\Groups({"component_detail", "component_module"})
+     * @Serializer\Groups({"component_module", "component_detail"})
      * */
     private $module;
 
